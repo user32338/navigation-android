@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/main_padding">
+
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/main_padding"
+        android:text="@string/tv_title_choose_nav_program" />
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_roteType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/main_padding" />
+
+    <GridView
+        android:id="@+id/gv_navigator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="@integer/num_columns"
+        tools:listitem="@layout/item_navigator" />
+
+    <CheckBox
+        android:id="@+id/ch_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/main_padding"
+        android:layout_marginStart="@dimen/main_padding"
+        android:layout_marginTop="@dimen/main_padding"
+        android:text="@string/ch_title_save_nav_program" />
+
+</LinearLayout>

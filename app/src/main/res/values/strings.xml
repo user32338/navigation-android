@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">NavigationUtils</string>
+    <string name="no_save_program">NO SAVE PROGRAM</string>
+    <string name="save_program">SAVE PROGRAM : %1$s, \nSAVE TYPE: %2$s</string>
+</resources>
