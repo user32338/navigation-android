@@ -54,7 +54,7 @@ public final class NavigatorHelper {
         Log.d(TAG, "installProgram = " + installProgram);
     }
 
-    public static List<ApplicationInfo> getNavigatorProgramList() {
+    static List<ApplicationInfo> getNavigatorProgramList() {
         return installProgram;
     }
 
@@ -199,7 +199,7 @@ public final class NavigatorHelper {
 
             switch (navigators) {
                 case GOOGLE:
-                    switch (this){
+                    switch (this) {
                         case AUTO:
                             return "d";
                         default:
@@ -207,16 +207,16 @@ public final class NavigatorHelper {
                     }
                 case YANDEXMAP:
 
-                    switch (this){
+                    switch (this) {
                         case AUTO:
                             return "auto";
                         case PUBLIC_TRANSPORT:
                             return "mt";
                         case ON_FOOT:
-                           return "pd";
+                            return "pd";
                     }
                 default:
-                   return "auto";
+                    return "auto";
             }
         }
 

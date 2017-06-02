@@ -3,7 +3,7 @@
 Простой выбор программы для построения маршрута  
 можно использовать Yandex и Google   
 
-Пример работы с BootomSheet:
+![sample](https://raw.githubusercontent.com/interactiveservices/navigation-android/master/screens/photo1.png)
 
 Использование
 
