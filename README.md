@@ -9,7 +9,7 @@
 Использование
 
 1) Инициализация библиотеки
-```
+```java
 // with builder
 new NavigatorHelper.Builder(this).setUseYandexMap(false)
                 .setRouteType(true)
@@ -18,13 +18,13 @@ new NavigatorHelper.Builder(this).setUseYandexMap(false)
 ```
 или
 
-```
+```java
 // or use default settings
 NavigatorHelper.init(this);
 ```
 2) Пример вызова:
 
-```
+```java
 // show bottomSheetDialog  
 NavigatorHelper.showChooseNavigationDialog(getSupportFragmentManager(),
                                                            MainActivity.this,
@@ -32,7 +32,7 @@ NavigatorHelper.showChooseNavigationDialog(getSupportFragmentManager(),
                                                            37.648801f);
 ```                                                           
 
-```
+```java
 // show alertDialog
 NavigatorHelper.showChooseNavigationAlertDialog(getSupportFragmentManager(),
                                                            MainActivity.this,
@@ -41,19 +41,20 @@ NavigatorHelper.showChooseNavigationAlertDialog(getSupportFragmentManager(),
 ```                   
 
 3) Кастомизация  
-| Параметр | Описание |  
-| -------- | ---------|  
-| setDebug | включить режим отладки и вывод в консоль с тегом "NavigatorHelper" |  
-| -------- | ---------|  
-| useYandexNav | использовать Яндекс Навигатор |  
-| -------- | ---------|  
-| useYandexMap | использовать Яндекс Карты |  
-| -------- | ---------|  
-| useGoogleMaps | использовать Google Maps |  
-| -------- | ---------|  
-| saveCommand | сохранять выбор пользователя |  
-| -------- | ---------|  
-| title | Заголовок в диалогах |  
-| -------- | ---------|  
-| saveTitle | Заголовок для сохранения команды |  
-| -------- | ---------|  
+  
+| Параметр | Описание |
+|-------------|-----------|
+| setDebug | включить режим отладки и вывод в консоль с тегом "NavigatorHelper" |
+|-------------|-----------|
+  | useYandexNav | использовать Яндекс Навигатор |
+|-------------|-----------|
+| useYandexMap | использовать Яндекс Карты |
+|-------------|-----------|
+| useGoogleMaps | использовать Google Maps |
+|-------------|-----------|
+| saveCommand | сохранять выбор пользователя |
+|-------------|-----------|
+| title | Заголовок в диалогах |
+|-------------|-----------|
+| saveTitle | Заголовок для сохранения команды |
+  
