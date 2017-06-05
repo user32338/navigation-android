@@ -8,6 +8,52 @@
 
 Использование
 
-Пример вызова:
+1) Инициализация библиотеки
+```
+// with builder
+new NavigatorHelper.Builder(this).setUseYandexMap(false)
+                .setRouteType(true)
+                .setSaveCommand(true)
+                .init();
+```
+или
 
+```
+// or use default settings
+NavigatorHelper.init(this);
+```
+2) Пример вызова:
 
+```
+// show bottomSheetDialog  
+NavigatorHelper.showChooseNavigationDialog(getSupportFragmentManager(),
+                                                           MainActivity.this,
+                                                           55.76009f,
+                                                           37.648801f);
+```                                                           
+
+```
+// show alertDialog
+NavigatorHelper.showChooseNavigationAlertDialog(getSupportFragmentManager(),
+                                                           MainActivity.this,
+                                                           55.76009f,
+                                                           37.648801f);
+```                   
+
+3) Кастомизация  
+| Параметр | Описание |  
+| -------- | ---------|  
+| setDebug | включить режим отладки и вывод в консоль с тегом "NavigatorHelper" |  
+| -------- | ---------|  
+| useYandexNav | использовать Яндекс Навигатор |  
+| -------- | ---------|  
+| useYandexMap | использовать Яндекс Карты |  
+| -------- | ---------|  
+| useGoogleMaps | использовать Google Maps |  
+| -------- | ---------|  
+| saveCommand | сохранять выбор пользователя |  
+| -------- | ---------|  
+| title | Заголовок в диалогах |  
+| -------- | ---------|  
+| saveTitle | Заголовок для сохранения команды |  
+| -------- | ---------|  

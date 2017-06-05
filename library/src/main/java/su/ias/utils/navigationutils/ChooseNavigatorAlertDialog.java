@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
@@ -39,7 +40,11 @@ public class ChooseNavigatorAlertDialog extends DialogFragment {
         builder = (Builder) getArguments().getSerializable(BUILDER);
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getActivity());
 
-        alertBuilder.setTitle(R.string.tv_title_choose_nav_program);
+        if (!TextUtils.isEmpty(builder.getTitle())) {
+            alertBuilder.setTitle(builder.getTitle());
+        } else {
+            alertBuilder.setTitle(R.string.tv_title_choose_nav_program);
+        }
 
         LinearLayout linearLayout = new LinearLayout(getActivity());
         linearLayout.setOrientation(LinearLayout.VERTICAL);
@@ -73,7 +78,11 @@ public class ChooseNavigatorAlertDialog extends DialogFragment {
         linearLayout.addView(listView);
         if (builder.isUseSave()) {
             checkBox = new CheckBox(getActivity());
-            checkBox.setText(R.string.ch_title_save_nav_program);
+            if (!TextUtils.isEmpty(builder.getSaveTitle())) {
+                checkBox.setText(builder.getSaveTitle());
+            } else {
+                checkBox.setText(R.string.ch_title_save_nav_program);
+            }
             checkBox.setPadding(padding, padding, padding, padding);
             checkBox.setCompoundDrawablePadding(padding);
             linearLayout.addView(checkBox);
