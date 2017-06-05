@@ -1,5 +1,9 @@
 # navigation-android
 
+[![Download](https://api.bintray.com/packages/interactiveservices/maven/navigation-android/images/download.svg)](https://bintray.com/interactiveservices/maven/navigation-android/_latestVersion)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
+[![API](https://img.shields.io/badge/API-14%2B-green.svg)](https://developer.android.com/about/versions/android-4.0.html)
+
 Простой выбор программы для построения маршрута  
 можно использовать Yandex и Google   
 
