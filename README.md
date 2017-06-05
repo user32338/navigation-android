@@ -12,6 +12,13 @@
 
 Использование
 
+```groovy
+dependencies {
+    ...
+    compile 'su.ias.utils.navigationutils:navigation-android:1.0.1'
+}
+```
+
 1) Инициализация библиотеки
 ```java
 // with builder
