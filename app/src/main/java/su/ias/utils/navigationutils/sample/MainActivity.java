@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import su.ias.utils.navigationutils.ChooseNavigatorAlertDialog;
 import su.ias.utils.navigationutils.NavigatorHelper;
 
 public class MainActivity extends AppCompatActivity {
@@ -16,10 +17,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        NavigatorHelper.init(this);
+
+        // use builder
+        new NavigatorHelper.Builder(this).setUseYandexMap(false)
+                .setRouteType(true)
+                .setSaveCommand(true)
+                .init();
+
+        // or use default settings
+        //NavigatorHelper.init(this);
 
         tvSavedProgram = (TextView) findViewById(R.id.tv_savedProgram);
 
+        // show bottom sheet dialog
         findViewById(R.id.bnt_openChooser).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -38,6 +48,20 @@ public class MainActivity extends AppCompatActivity {
                 tvSavedProgram.setText(R.string.no_save_program);
             }
         });
+
+        // show alert dialog
+        findViewById(R.id.bnt_openChooserAlert).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                NavigatorHelper.showChooseNavigationAlertDialog(getSupportFragmentManager(),
+                                                           MainActivity.this,
+                                                           55.76009f,
+                                                           37.648801f);
+            }
+        });
+
+        // or use custom dialog....
     }
 
     @Override

@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="?android:attr/selectableItemBackground"
-    android:gravity="center_horizontal"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
     android:padding="@dimen/small_padding"
-    xmlns:tools="http://schemas.android.com/tools">
+    tools:ignore="UseCompoundDrawables">
 
     <ImageView
         android:id="@+id/iv_icon"
         android:layout_width="@android:dimen/app_icon_size"
         android:layout_height="@android:dimen/app_icon_size"
-        android:layout_marginBottom="8dp"
         android:clickable="false"
         tools:src="@drawable/ic_navigation_24dp"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        android:layout_marginEnd="@dimen/main_padding"
+        android:layout_marginRight="@dimen/main_padding" />
 
     <TextView
         android:id="@+id/tv_title"

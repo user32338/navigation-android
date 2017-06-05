@@ -1,12 +1,16 @@
 package su.ias.utils.navigationutils;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StyleRes;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.TabLayout;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +18,14 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.Serializable;
 
 /**
  * Created on 6/1/17.
+ * Bottom Sheet dialog with choose naviagtor program
  */
-public class ChooseNavigatorDialog extends BottomSheetDialogFragment {
+public class ChooseNavigatorBottomDialog extends BottomSheetDialogFragment {
 
     //is empty string;
     private static final String BUILDER = "";
@@ -30,8 +34,8 @@ public class ChooseNavigatorDialog extends BottomSheetDialogFragment {
     private CheckBox ch_save;
     private Builder builder;
 
-    private static ChooseNavigatorDialog getChooser(Builder builder) {
-        ChooseNavigatorDialog navigatorDialog = new ChooseNavigatorDialog();
+    private static ChooseNavigatorBottomDialog getChooser(Builder builder) {
+        ChooseNavigatorBottomDialog navigatorDialog = new ChooseNavigatorBottomDialog();
         final Bundle bundle = new Bundle();
         bundle.putSerializable(BUILDER, builder);
         navigatorDialog.setArguments(bundle);
@@ -74,16 +78,12 @@ public class ChooseNavigatorDialog extends BottomSheetDialogFragment {
                 }
 
                 Intent navIntent = NavigatorHelper.getNavigationIntent(info,
-                                                                       builder.toLatitude,
-                                                                       builder.toLongitude,
+                                                                       builder.getToLatitude(),
+                                                                       builder.getToLongitude(),
                                                                        routeType);
 
-                if (navIntent.resolveActivity(getContext().getPackageManager()) != null) {
-                    getContext().startActivity(navIntent);
+                if (NavigatorHelper.checkAndStartIntent(navIntent, getContext())) {
                     dismiss();
-                } else {
-                    Toast.makeText(getActivity(), R.string.error_create_intent, Toast.LENGTH_LONG)
-                            .show();
                 }
 
             }
@@ -97,12 +97,12 @@ public class ChooseNavigatorDialog extends BottomSheetDialogFragment {
             tb_routeType.setVisibility(View.GONE);
         }
 
-        if (!TextUtils.isEmpty(builder.title)) {
-            tv_title.setText(builder.title);
+        if (!TextUtils.isEmpty(builder.getTitle())) {
+            tv_title.setText(builder.getTitle());
         }
-        if (builder.useSave) {
-            if (!TextUtils.isEmpty(builder.saveTitle)) {
-                ch_save.setText(builder.saveTitle);
+        if (builder.isUseSave()) {
+            if (!TextUtils.isEmpty(builder.getSaveTitle())) {
+                ch_save.setText(builder.getSaveTitle());
             }
         } else {
             ch_save.setChecked(false);
@@ -112,22 +112,13 @@ public class ChooseNavigatorDialog extends BottomSheetDialogFragment {
     }
 
     @SuppressWarnings({"unused", "WeakerAccess"})
-    public static class Builder implements Serializable {
+    public static class Builder extends AbstractBuilder<Builder> implements Serializable {
 
         private boolean useRoadType = true;
-        private boolean useSave = true;
-        private String title = null;
-        private String saveTitle = null;
         private String defaultRoadType = NavigatorHelper.RouteType.AUTO.name();
-        private Double fromLatitude = null;
-        private Double fromLongitude = null;
-        private double toLatitude;
-        private double toLongitude;
-        private int style;
 
-        public Builder(double latitude, double longitude) {
-            toLongitude = longitude;
-            toLatitude = latitude;
+        public Builder(double toLatitude, double toLongitude) {
+            super(toLatitude, toLongitude);
         }
 
         public Builder setUseRoadType(boolean useRoadType) {
@@ -135,38 +126,13 @@ public class ChooseNavigatorDialog extends BottomSheetDialogFragment {
             return this;
         }
 
-        public Builder setUseSave(boolean useSave) {
-            this.useSave = useSave;
+        public Builder setDefaultRoadType(String roadType){
+            defaultRoadType = roadType;
             return this;
         }
 
-        public Builder setTitle(String title) {
-            this.title = title;
-            return this;
-        }
-
-        public Builder setSaveTitle(String saveTitle) {
-            this.saveTitle = saveTitle;
-            return this;
-        }
-
-        public Builder setDefaultRoadType(String defaultRoadType) {
-            this.defaultRoadType = defaultRoadType;
-            return this;
-        }
-
-        public Builder setFromLatitude(Double fromLatitude) {
-            this.fromLatitude = fromLatitude;
-            return this;
-        }
-
-        public Builder setFromLongitude(Double fromLongitude) {
-            this.fromLongitude = fromLongitude;
-            return this;
-        }
-
-        public ChooseNavigatorDialog build() {
-            return ChooseNavigatorDialog.getChooser(this);
+        public ChooseNavigatorBottomDialog build() {
+            return ChooseNavigatorBottomDialog.getChooser(this);
         }
     }
 

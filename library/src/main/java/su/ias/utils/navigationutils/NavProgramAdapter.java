@@ -18,9 +18,15 @@ import java.util.List;
 class NavProgramAdapter extends BaseAdapter {
 
     private List<ApplicationInfo> data;
+    private boolean isListView = false;
 
-    public NavProgramAdapter() {
+    NavProgramAdapter() {
+        this(false);
+    }
+
+    NavProgramAdapter(boolean inList) {
         this.data = NavigatorHelper.getNavigatorProgramList();
+        isListView = inList;
     }
 
     @Override
@@ -43,8 +49,13 @@ class NavProgramAdapter extends BaseAdapter {
 
         ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_navigator, parent, false);
+            if (isListView){
+                convertView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_navigator_list, parent, false);
+            }else {
+                convertView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_navigator, parent, false);
+            }
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         } else {

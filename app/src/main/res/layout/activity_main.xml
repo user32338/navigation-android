@@ -19,12 +19,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/main_padding"
-        android:text="Open Chooser" />
+        android:text="Open Chooser Bottom" />
+
+    <Button
+        android:id="@+id/bnt_openChooserAlert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/main_padding"
+        android:text="Open Chooser Alert" />
+
 
     <Button
         android:id="@+id/bnt_clearSaveProgram"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/main_padding"
         android:text="Clear Save Program" />
 
 </LinearLayout>

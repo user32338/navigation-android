@@ -25,6 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:numColumns="@integer/num_columns"
+        android:paddingLeft="@dimen/main_padding"
+        android:paddingRight="@dimen/main_padding"
         tools:listitem="@layout/item_navigator" />
 
     <CheckBox
@@ -34,6 +36,7 @@
         android:layout_marginLeft="@dimen/main_padding"
         android:layout_marginStart="@dimen/main_padding"
         android:layout_marginTop="@dimen/main_padding"
+        android:drawablePadding="@dimen/small_padding"
         android:text="@string/ch_title_save_nav_program" />
 
 </LinearLayout>

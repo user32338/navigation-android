@@ -7,6 +7,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * help to send navigation intent
  */
 public final class NavigatorHelper {
 
@@ -26,8 +27,34 @@ public final class NavigatorHelper {
 
     private static final List<String> navProgram = new ArrayList<>();
     private static final List<ApplicationInfo> installProgram = new ArrayList<>();
+    private static boolean isDebug = false;
+    private static boolean routeType = false;
+    private static boolean saveCommand = true;
+    private static String title;
+    private static String saveTitle;
 
     private NavigatorHelper() {
+    }
+
+    private static void init(Builder builder) {
+        installProgram.clear();
+        if (builder.useGoogleMaps) {
+            navProgram.add(NAVIGATORS.GOOGLE.getPackageName());
+        }
+        if (builder.useYandexMap) {
+            navProgram.add(NAVIGATORS.YANDEXMAP.getPackageName());
+        }
+        if (builder.useYandexNav) {
+            navProgram.add(NAVIGATORS.YANDEX.getPackageName());
+        }
+
+        isDebug = builder.debug;
+        routeType = builder.routeType;
+        saveCommand = builder.saveCommand;
+        title = builder.title;
+        saveTitle = builder.saveTitle;
+
+        createNavList(builder.context.getPackageManager());
 
     }
 
@@ -40,22 +67,24 @@ public final class NavigatorHelper {
             navProgram.add(NAVIGATORS.YANDEXMAP.getPackageName());
 
             installProgram.clear();
-            PackageManager packageManager = context.getPackageManager();
-            List<ApplicationInfo> installedProgram =
-                    packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-            for (ApplicationInfo info : installedProgram) {
-                Log.d(TAG, "program = " + info);
-                if (navProgram.contains(info.packageName)) {
-                    installProgram.add(info);
-                }
-            }
-
+            createNavList(context.getPackageManager());
         }
-        Log.d(TAG, "installProgram = " + installProgram);
+        if (isDebug) {
+            Log.d(TAG, "installProgram = " + installProgram);
+        }
     }
 
-    static List<ApplicationInfo> getNavigatorProgramList() {
-        return installProgram;
+    private static void createNavList(PackageManager packageManager) {
+        List<ApplicationInfo> installedProgram =
+                packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+        for (ApplicationInfo info : installedProgram) {
+            if (isDebug) {
+                Log.d(TAG, "program = " + info);
+            }
+            if (navProgram.contains(info.packageName)) {
+                installProgram.add(info);
+            }
+        }
     }
 
     public static void showChooseNavigationDialog(FragmentManager fragmentManager,
@@ -72,44 +101,44 @@ public final class NavigatorHelper {
                                                   @Nullable final Double fromLatitude,
                                                   @Nullable final Double fromLongitude) {
 
-        String savedProgram = getSavedNavigator(context);
-        boolean isSave = false;
-        if (!TextUtils.isEmpty(savedProgram)) {
+        showNavDialog(fragmentManager, context,
+                      //@formatter:off
+                      new ChooseNavigatorBottomDialog.Builder(toLatitude, toLongitude)
+                              .setDefaultRoadType(RouteType.AUTO.name())
+                              .setUseRoadType(routeType)
+                              .setTitle(title)
+                              .setSaveTitle(saveTitle)
+                              .setFromLatitude(fromLatitude)
+                              .setFromLongitude(fromLongitude)
+                              .setUseSave(saveCommand));
+                      //@formatter:on
 
-            for (ApplicationInfo info : installProgram) {
-                if (info.packageName.equals(savedProgram)) {
-                    isSave = true;
-                    context.startActivity(getNavigationIntent(info,
-                                                              toLatitude,
-                                                              toLongitude,
-                                                              getDefaultRouteType(context)));
-                }
-            }
+    }
 
-            if (!isSave) {
-                clearCommand(context);
-            }
+    public static void showChooseNavigationAlertDialog(FragmentManager fragmentManager,
+                                                       final Context context,
+                                                       final double latitude,
+                                                       final double longitude) {
+        showChooseNavigationAlertDialog(fragmentManager, context, latitude, longitude, null, null);
+    }
 
-        }
+    public static void showChooseNavigationAlertDialog(FragmentManager fragmentManager,
+                                                       final Context context,
+                                                       final double toLatitude,
+                                                       final double toLongitude,
+                                                       @Nullable final Double fromLatitude,
+                                                       @Nullable final Double fromLongitude) {
 
-        if (!isSave) {
+        showNavDialog(fragmentManager, context,
+                      //@formatter:off
+                      new ChooseNavigatorAlertDialog.Builder(toLatitude, toLongitude)
+                              .setTitle(title)
+                              .setSaveTitle(saveTitle)
+                              .setFromLatitude(fromLatitude)
+                              .setFromLongitude(fromLongitude)
+                              .setUseSave(saveCommand));
+                      //@formatter:on
 
-            if (installProgram.size() > 1) {
-                new ChooseNavigatorDialog.Builder(toLatitude, toLongitude).setFromLatitude(
-                        fromLatitude)
-                        .setFromLongitude(fromLongitude)
-                        .build()
-                        .show(fragmentManager, "navigatorDialog");
-            } else if (installProgram.size() == 1) {
-                context.startActivity(getNavigationIntent(installProgram.get(0),
-                                                          toLatitude,
-                                                          toLongitude,
-                                                          RouteType.AUTO));
-            } else {
-                Toast.makeText(context, R.string.error_navigator_not_found, Toast.LENGTH_LONG)
-                        .show();
-            }
-        }
     }
 
     public static Intent getNavigationIntent(ApplicationInfo info,
@@ -180,6 +209,61 @@ public final class NavigatorHelper {
         return RouteType.valueOf(preferences.getString(SAVED_ROUTE_TYPE, "AUTO"));
     }
 
+    public static boolean checkAndStartIntent(Intent navIntent, Context context) {
+        if (navIntent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(navIntent);
+            return true;
+        } else {
+            Toast.makeText(context, R.string.error_create_intent, Toast.LENGTH_LONG).show();
+        }
+        return false;
+    }
+
+    public static void showNavDialog(FragmentManager fragmentManager,
+                                     Context context,
+                                     AbstractBuilder builder) {
+
+        String savedProgram = getSavedNavigator(context);
+        boolean isSave = false;
+        if (!TextUtils.isEmpty(savedProgram)) {
+
+            for (ApplicationInfo info : installProgram) {
+                if (info.packageName.equals(savedProgram)) {
+                    isSave = true;
+                    context.startActivity(getNavigationIntent(info,
+                                                              builder.getToLatitude(),
+                                                              builder.getToLongitude(),
+                                                              getDefaultRouteType(context)));
+                }
+            }
+
+            if (!isSave) {
+                clearCommand(context);
+            }
+
+        }
+
+        if (!isSave) {
+
+            if (installProgram.size() > 1) {
+                builder.build().show(fragmentManager, "navigatorDialog");
+            } else if (installProgram.size() == 1) {
+                context.startActivity(getNavigationIntent(installProgram.get(0),
+                                                          builder.getToLatitude(),
+                                                          builder.getToLongitude(),
+                                                          RouteType.AUTO));
+            } else {
+                Toast.makeText(context, R.string.error_navigator_not_found, Toast.LENGTH_LONG)
+                        .show();
+            }
+        }
+
+    }
+
+    public static List<ApplicationInfo> getNavigatorProgramList() {
+        return new ArrayList<>(installProgram);
+    }
+
     public enum RouteType {
 
         AUTO, PUBLIC_TRANSPORT, ON_FOOT;
@@ -244,5 +328,78 @@ public final class NavigatorHelper {
                     return Intent.ACTION_VIEW;
             }
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static class Builder {
+
+        private Context context;
+        private boolean useYandexNav = true;
+        private boolean useYandexMap = true;
+        private boolean useGoogleMaps = true;
+        private boolean debug = false;
+        private boolean routeType = false;
+        private boolean saveCommand = true;
+        private String title = null;
+        private String saveTitle = null;
+
+        public Builder(Context context) {
+            this.context = context;
+        }
+
+        public Builder setUseYandexNav(boolean useYandexNav) {
+            this.useYandexNav = useYandexNav;
+            return this;
+        }
+
+        public Builder setUseYandexMap(boolean useYandexMap) {
+            this.useYandexMap = useYandexMap;
+            return this;
+        }
+
+        public Builder setUseGoogleMaps(boolean useGoogleMaps) {
+            this.useGoogleMaps = useGoogleMaps;
+            return this;
+        }
+
+        public Builder setDebug(boolean debug) {
+            this.debug = debug;
+            return this;
+        }
+
+        public Builder setRouteType(boolean routeType) {
+            this.routeType = routeType;
+            return this;
+        }
+
+        public Builder setSaveCommand(boolean saveCommand) {
+            this.saveCommand = saveCommand;
+            return this;
+        }
+
+        public Builder setTitle(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder setSaveTitle(String saveTitle) {
+            this.saveTitle = saveTitle;
+            return this;
+        }
+
+        public Builder setSaveTitle(@StringRes int saveTitlee) {
+            this.saveTitle = context.getResources().getString(saveTitlee);
+            return this;
+        }
+
+        public Builder setTitle(@StringRes int title) {
+            this.title = context.getResources().getString(title);
+            return this;
+        }
+
+        public void init() {
+            NavigatorHelper.init(this);
+        }
+
     }
 }
